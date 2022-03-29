@@ -47,6 +47,21 @@ let
         expected = [{ file = "grpcio-1.25.0-cp37-cp37m-manylinux2010_x86_64.whl"; }];
       };
 
+    testLinuxPickPython37Compatible =
+      let
+        cs = [
+          { file = "opencv_contrib_python-4.5.5.64-cp37-abi3-macosx_11_0_arm64.whl"; }
+          { file = "opencv_contrib_python-4.5.5.64-cp36-abi3-win_amd64.whl"; }
+          { file = "opencv_contrib_python-4.5.5.64-cp36-abi3-win32.whl"; }
+          { file = "opencv_contrib_python-4.5.5.64-cp36-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"; }
+          { file = "opencv_contrib_python-4.5.5.64-cp36-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl"; }
+          { file = "opencv_contrib_python-4.5.5.64-cp36-abi3-macosx_10_15_x86_64.whl"; }
+        ];
+      in
+      {
+        expr = (pep425Python37.selectWheel cs);
+        expected = [{ file = "opencv_contrib_python-4.5.5.64-cp36-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"; }];
+      };
 
     testOSXPreferNewer =
       let
