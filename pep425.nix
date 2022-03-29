@@ -1,4 +1,4 @@
-{ lib, stdenv, poetryLib, python, isLinux ? stdenv.isLinux }:
+{ lib, stdenv, poetryLib, python, isLinux ? stdenv.isLinux, isDarwin ? stdenv.isDarwin }:
 let
   inherit (lib.strings) escapeRegex hasPrefix hasSuffix hasInfix splitString removePrefix removeSuffix;
   targetMachine = poetryLib.getTargetMachine stdenv;
@@ -82,7 +82,7 @@ let
           else
             (p: p == "any")
         else
-          if stdenv.isDarwin
+          if isDarwin
           then
             if stdenv.targetPlatform.isAarch64
             then (p: p == "any" || (hasInfix "macosx" p && lib.lists.any (e: hasSuffix e p) [ "arm64" "aarch64" ]))
