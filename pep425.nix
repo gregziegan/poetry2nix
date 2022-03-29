@@ -7,14 +7,16 @@ let
   #
   # e.g "2.7.17" -> "cp27"
   #     "3.5.9"  -> "cp35"
-  pythonTag =
+  pythonVer =
     let
       ver = builtins.splitVersion python.version;
+    in
+    {
+      impl = "cp";
       major = builtins.elemAt ver 0;
       minor = builtins.elemAt ver 1;
-    in
-    "cp${major}${minor}";
-  abiTag = "${pythonTag}m";
+    };
+  abiTag = "cp${pythonVer.major}${pythonVer.minor}m";
 
   #
   # Parses wheel file returning an attribute set
@@ -48,14 +50,13 @@ let
     then [ ]
     else (builtins.filter (x: hasInfix v x.file) candidates) ++ (findBestMatches vs candidates);
 
-  # pyver = "cpXX"
+  # pyver = { impl = "cp"; major = "X"; minor = "X" }
   # x     = "cpXX" | "py2" | "py3" | "py2.py3"
   isPyVersionCompatible = pyver: x:
     let
-      normalize = y: ''cp${removePrefix "cp" (removePrefix "py" y)}'';
-      isCompat = p: x: hasPrefix (normalize x) p;
+      isCompat = p: v: builtins.match "(${escapeRegex p.impl}|py)${escapeRegex p.major}[0-${escapeRegex p.minor}]?" v != null;
     in
-    lib.lists.any (isCompat pyver) (splitString "." x);
+    lib.lists.any (v: isCompat pyver v) (splitString "." x);
 
   #
   # Selects the best matching wheel file from a list of files
@@ -93,7 +94,7 @@ let
         let
           f = toWheelAttrs x.file;
         in
-        (withPython pythonTag abiTag f) && (withPlatforms f);
+        (withPython pythonVer abiTag f) && (withPlatforms f);
       filtered = builtins.filter filterWheel filesWithoutSources;
       choose = files:
         let
