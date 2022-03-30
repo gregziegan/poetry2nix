@@ -1002,7 +1002,11 @@ lib.composeManyExtensions [
         }
       );
 
-      mypy = super.mypy.overridePythonAttrs (
+      mypy = (super.mypy.override
+        ({
+          # We can't apply the patches to the wheel because of mypyc compiled modules.
+          preferWheel = false;
+        })).overridePythonAttrs (
         old: {
           # FIXME: Remove patch after upstream has decided the proper solution.
           #        https://github.com/python/mypy/pull/11143
@@ -1017,6 +1021,7 @@ lib.composeManyExtensions [
               sha256 = "sha256-waIZ+m3tfvYE4HJ8kL6rN/C4fMjvLEe9UoPbt9mHWIM=";
             })
           ];
+
           buildInputs = (old.buildInputs or [ ]) ++ [
             self.types-typed-ast
           ];
