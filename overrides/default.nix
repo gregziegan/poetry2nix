@@ -2015,9 +2015,18 @@ lib.composeManyExtensions [
       weasyprint = super.weasyprint.overridePythonAttrs (
         old: {
           inherit (pkgs.python3.pkgs.weasyprint) patches;
+          # Set fuzz to 3 which makes patch ignore any context. This makes the patch more
+          # independent of the exact weasyprint version.
+          patchFlags = "-p1 --fuzz=3";
           nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [ self.pytest-runner ];
           buildInputs = (old.buildInputs or [ ]) ++ [ self.pytest-runner ];
-        }
+        } // (if old.format == "wheel" then {
+          dontPatch = true;
+          postInstall = old.postInstall or "" + ''
+            cd "$out/${self.python.sitePackages}"
+            patchPhase
+          '';
+        } else { })
       );
 
       web3 = super.web3.overridePythonAttrs {
