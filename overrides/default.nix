@@ -1562,12 +1562,13 @@ lib.composeManyExtensions [
       );
 
       pytest = super.pytest.overridePythonAttrs (
-        old: {
+        old:
+        if old.format != "wheel" then {
           # Fixes https://github.com/pytest-dev/pytest/issues/7891
           postPatch = old.postPatch or "" + ''
             sed -i '/\[metadata\]/aversion = ${old.version}' setup.cfg
           '';
-        }
+        } else { }
       );
 
       pytest-django = super.pytest-django.overridePythonAttrs (
