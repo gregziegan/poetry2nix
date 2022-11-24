@@ -167,6 +167,9 @@
   "aio-georss-gdacs": [
     "setuptools"
   ],
+  "aio-pika": [
+    "setuptools"
+  ],
   "aioairq": [
     "setuptools"
   ],
@@ -442,6 +445,9 @@
   ],
   "aioridwell": [
     "poetry-core",
+    "setuptools"
+  ],
+  "aiormq": [
     "setuptools"
   ],
   "aiorpcx": [
@@ -898,6 +904,9 @@
     "setuptools"
   ],
   "arpeggio": [
+    "setuptools"
+  ],
+  "arpy": [
     "setuptools"
   ],
   "arrayqueues": [
@@ -2778,6 +2787,9 @@
   "cmdline": [
     "setuptools"
   ],
+  "cmdstanpy": [
+    "setuptools"
+  ],
   "cmigemo": [
     "setuptools"
   ],
@@ -2840,6 +2852,10 @@
     "setuptools"
   ],
   "colorama": [
+    {
+      "buildSystem": "hatchling",
+      "from": "0.4.6"
+    },
     "setuptools"
   ],
   "colorcet": [
@@ -3707,6 +3723,9 @@
   "django-colorful": [
     "setuptools"
   ],
+  "django-colorfield": [
+    "setuptools"
+  ],
   "django-compat": [
     "setuptools"
   ],
@@ -3940,6 +3959,9 @@
   "djangorestframework-simplejwt": [
     "setuptools",
     "setuptools-scm"
+  ],
+  "djangorestframework-stubs": [
+    "setuptools"
   ],
   "djmail": [
     "setuptools"
@@ -4566,7 +4588,9 @@
   ],
   "exceptiongroup": [
     "flit-core",
+    "flit-scm",
     "flitBuildHook",
+    "flit-scm",
     "setuptools"
   ],
   "exchangelib": [
@@ -7255,7 +7279,14 @@
     "setuptools"
   ],
   "jupyter-server": [
-    "setuptools"
+    {
+      "buildSystem": "setuptools",
+      "until": "1.21.0"
+    },
+    {
+      "buildSystem": "jupyter-packaging",
+      "from": "1.21.0"
+    }
   ],
   "jupyter-server-mathjax": [
     "jupyter-packaging",
@@ -7904,6 +7935,9 @@
   "luhn": [
     "setuptools"
   ],
+  "lunarcalendar": [
+    "setuptools"
+  ],
   "lupa": [
     "cython",
     "setuptools"
@@ -8289,6 +8323,9 @@
   ],
   "migen": [
     "setuptools"
+  ],
+  "migra": [
+    "poetry-core"
   ],
   "mike": [
     "setuptools"
@@ -9119,7 +9156,14 @@
   ],
   "notebook-shim": [
     "jupyter-packaging",
-    "setuptools"
+    {
+      "buildSystem": "setuptools",
+      "until": "0.2.0"
+    },
+    {
+      "buildSystem": "hatchling",
+      "from": "0.2.0"
+    }
   ],
   "notedown": [
     "setuptools"
@@ -10304,6 +10348,9 @@
   "plyvel": [
     "setuptools"
   ],
+  "pmdarima": [
+    "setuptools"
+  ],
   "pmsensor": [
     "setuptools"
   ],
@@ -11200,6 +11247,9 @@
   ],
   "pydot": [
     "setuptools"
+  ],
+  "pydpkg": [
+    "poetry"
   ],
   "pydrive2": [
     "setuptools"
@@ -14675,6 +14725,9 @@
   "schema": [
     "setuptools"
   ],
+  "schemainspect": [
+    "setuptools"
+  ],
   "schema-salad": [
     "setuptools"
   ],
@@ -14977,6 +15030,9 @@
     "setuptools"
   ],
   "shamir-mnemonic": [
+    "setuptools"
+  ],
+  "shap": [
     "setuptools"
   ],
   "shapely": [
@@ -15643,6 +15699,9 @@
   "sqlalchemy-utils": [
     "setuptools"
   ],
+  "sqlbag": [
+    "setuptools"
+  ],
   "sqlglot": [
     "setuptools"
   ],
@@ -15741,6 +15800,9 @@
     "setuptools"
   ],
   "statsd": [
+    "setuptools"
+  ],
+  "statsforecast": [
     "setuptools"
   ],
   "statsmodels": [
@@ -16038,6 +16100,9 @@
     "setuptools"
   ],
   "taxi": [
+    "setuptools"
+  ],
+  "tbats": [
     "setuptools"
   ],
   "tblib": [
@@ -16662,6 +16727,9 @@
   "tunigo": [
     "setuptools"
   ],
+  "tusker": [
+    "poetry"
+  ],
   "turnt": [
     "flitBuildHook",
     "setuptools"
@@ -16814,6 +16882,9 @@
     "setuptools"
   ],
   "types-jsonschema": [
+    "setuptools"
+  ],
+  "types-markdown": [
     "setuptools"
   ],
   "types-protobuf": [

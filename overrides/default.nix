@@ -306,6 +306,18 @@ lib.composeManyExtensions [
           )
         );
 
+      cmdstanpy = super.cmdstanpy.overridePythonAttrs (
+        old: {
+          propagatedBuildInputs = (old.propagatedBuildInputs or [ ]) ++ [ pkgs.cmdstan ];
+          patchPhase = ''
+            substituteInPlace cmdstanpy/model.py \
+              --replace 'cmd = [make]' \
+              'cmd = ["${pkgs.cmdstan}/bin/stan"]'
+          '';
+          CMDSTAN = "${pkgs.cmdstan}";
+        }
+      );
+
       contourpy = super.contourpy.overridePythonAttrs (
         old: {
           buildInputs = (old.buildInputs or [ ]) ++ [ self.pybind11 ];
@@ -416,6 +428,10 @@ lib.composeManyExtensions [
           substituteInPlace setup.py --replace 'setup_requires=["pytest-runner"],' ""
         '';
       });
+
+      darts = super.darts.override {
+        preferWheel = true;
+      };
 
       datadog-lambda = super.datadog-lambda.overridePythonAttrs (old: {
         postPatch = ''
@@ -1300,10 +1316,26 @@ lib.composeManyExtensions [
       );
 
       open3d = super.open3d.overridePythonAttrs (old: {
+        propagatedBuildInputs = (old.propagatedBuildInputs or [ ]) ++ [ self.ipywidgets ];
         buildInputs = (old.buildInputs or [ ]) ++ [
           pkgs.udev
           pkgs.libusb1
-        ];
+        ] ++ (if lib.versionAtLeast super.open3d.version "0.16.0" then [
+          pkgs.mesa
+          (
+            pkgs.symlinkJoin {
+              name = "llvm-with-ubuntu-compatible-symlink";
+              paths = [
+                pkgs.llvm_10.lib
+                (pkgs.runCommand "llvm-ubuntu-compatible-symlink" { }
+                  ''
+                    mkdir -p "$out/lib/";
+                    ln -s "${pkgs.llvm_10.lib}/lib/libLLVM-10.so" "$out/lib/libLLVM-10.so.1"
+                  ''
+                )
+              ];
+            })
+        ] else [ ]);
         # TODO(Sem Mulder): Add overridable flags for CUDA/PyTorch/Tensorflow support.
         autoPatchelfIgnoreMissingDeps = true;
       });
@@ -1503,6 +1535,12 @@ lib.composeManyExtensions [
 
       prettytable = super.prettytable.overridePythonAttrs (old: {
         propagatedBuildInputs = (old.propagatedBuildInputs or [ ]) ++ [ self.setuptools ];
+      });
+
+      prophet = super.prophet.overridePythonAttrs (old: {
+        propagatedBuildInputs = (old.propagatedBuildInputs or [ ]) ++ [ pkgs.cmdstan self.cmdstanpy ];
+        PROPHET_REPACKAGE_CMDSTAN = "false";
+        CMDSTAN = "${pkgs.cmdstan}";
       });
 
       psycopg2 = super.psycopg2.overridePythonAttrs (
@@ -1778,6 +1816,16 @@ lib.composeManyExtensions [
           doCheck = false;
         }
       );
+
+      pytorch-lightning = super.pytorch-lightning.override {
+        unpackPhase = ''
+          # $src remains a gzipped tarball otherwise.
+          mkdir -p tmp
+          tar xvf $src --directory=tmp
+          mv tmp/pytorch-lightning*/* .
+          rm -rf tmp
+        '';
+      };
 
       pyqt5 =
         let
